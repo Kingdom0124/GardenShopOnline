@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Error 404";
+}
+
+<!-- Begin Main Content Area -->
+<div class="error-404-area section-space-y-axis-100" data-bg-image="../../assets/customer/images/error-404/bg/1-1920x886.png">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-lg-12 align-self-center">
+                <div class="error-404-content">
+                    <div class="error-404-img">
+                        <img src="~/assets/customer/images/error-404/404.png" alt="Error Image">
+                    </div>
+                    <h2 class="title"><span>Oops,</span> page not found!</h2>
+                    <div class="button-wrap">
+                        <a class="btn btn-error" href="@Url.Action("Index", "Home")">
+                            Back to home
+                            <i class="pe-7s-home"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Content Area End Here -->

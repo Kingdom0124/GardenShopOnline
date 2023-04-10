@@ -1,0 +1,290 @@
+﻿.pd-wrap {
+    padding: 40px 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.heading-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sub-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    display: block;
+    font-weight: 600;
+    color: #2e9ca1;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.heading-section h2 {
+    font-size: 32px;
+    font-weight: 500;
+    padding-top: 10px;
+    padding-bottom: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.name {
+    margin-bottom: 0;
+    line-height: 14px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.position {
+    color: #adadad;
+    font-size: 14px;
+}
+
+.product-name {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 22px;
+    margin-bottom: 4px;
+}
+
+.product-price-discount {
+    font-size: 22px;
+    font-weight: 400;
+    padding: 10px 0;
+    clear: both;
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.input {
+    width: 60px;
+    text-align: center;
+}
+
+.review-form .form-group {
+    clear: both;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.review-form .rate {
+    float: none;
+    display: inline-block;
+}
+
+.review-heading {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 24px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    color: #000;
+}
+
+.review-form .form-control {
+    font-size: 14px;
+}
+
+.review-form input.form-control {
+    height: 40px;
+}
+
+.review-form textarea.form-control {
+    resize: none;
+}
+
+.review-form .round-black-btn {
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.card-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+img {
+    width: 100%;
+}
+
+.img-display {
+    overflow: hidden;
+}
+
+.img-showcase {
+    display: flex;
+    width: 100%;
+    transition: all 0.5s ease;
+}
+
+    .img-showcase img {
+        min-width: 100%;
+    }
+
+.img-select {
+    display: flex;
+}
+
+.img-item {
+    margin: 0.3rem;
+}
+
+    .img-item:nth-child(1),
+    .img-item:nth-child(2),
+    .img-item:nth-child(3) {
+        margin-right: 0;
+    }
+
+    .img-item:hover {
+        opacity: 0.8;
+    }
+
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+    /* Style the buttons inside the tab */
+    .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+    }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.round-black-btn {
+    border-radius: 4px;
+    background: #212529;
+    color: #fff;
+    padding: 7px 45px;
+    display: inline-block;
+    margin-top: 20px;
+    border: solid 2px #212529;
+    transition: all 0.5s ease-in-out 0s;
+}
+
+.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.card-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.col-md-6 {
+    flex: 0 0 auto;
+    width: 50%;
+}
+
+/*.row > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-top: var(--bs-gutter-y);
+}
+
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(var(--bs-gutter-y) * -1);
+    margin-right: calc(var(--bs-gutter-x) * -.5);
+    margin-left: calc(var(--bs-gutter-x) * -.5);
+}
+    */
+.img-select {
+    display: flex;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.img-item:nth-child(1), .img-item:nth-child(2), .img-item:nth-child(3) {
+    margin-right: 0px;
+}
+
+.img-item {
+    margin: 0.3rem;
+}
+
+img, svg {
+    vertical-align: middle;
+}
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+
+

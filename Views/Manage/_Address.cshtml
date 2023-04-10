@@ -1,0 +1,19 @@
+﻿@model string
+
+<div class="myaccount-address">
+    <p>The following addresses will be used on the checkout page by default.</p>
+    <div class="row">
+        <div class="col">
+            <h4 class="small-title">BILLING ADDRESS</h4>
+            <address>
+                @Model
+            </address>
+        </div>
+        <div class="col">
+            <h4 class="small-title">SHIPPING ADDRESS</h4>
+            <address>
+                @Model
+            </address>
+        </div>
+    </div>
+</div>

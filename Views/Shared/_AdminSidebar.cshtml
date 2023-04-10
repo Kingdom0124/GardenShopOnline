@@ -1,0 +1,97 @@
+﻿<ul class="nav pcoded-inner-navbar">
+    <li class="nav-item pcoded-menu-caption">
+        <label>Manage</label>
+    </li>
+    @if (User.IsInRole("Staff"))
+    {
+        <li class="nav-item ">
+            <a href="@Url.Action("Index","Types")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-layout"></i></span>
+                <span class="pcoded-mtext">Type</span>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a href="@Url.Action("Index","Categories")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-layout"></i></span>
+                <span class="pcoded-mtext">Categogy</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("AdminIndex","Products")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-wind"></i></span>
+                <span class="pcoded-mtext">Product</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","CustomerOrders")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-inbox"></i></span> <span class="pcoded-mtext">Order <span><span class="badge badge-light float-right ml-2" id="orderCount">@ViewData["OrderCount"]</span></span></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","CommentProducts")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-grid"></i></span> <span class="pcoded-mtext">Comment <span><span class="badge badge-light float-right ml-2" id="commentCount">@ViewData["CommentCount"]</span></span></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Customer","Contact")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-phone"></i></span>
+                <span class="pcoded-mtext">Customer Contact <span><span class="badge badge-light float-right ml-2" id="contactCount">@ViewData["ContactCount"]</span></span></span>
+            </a>
+        </li>
+    }
+    else if (User.IsInRole("Admin"))
+    {
+        <li class="nav-item">
+            <a href="@Url.Action("Index","AspNetUsers")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-user"></i></span>
+                <span class="pcoded-mtext">Staff</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","BankPayments")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-monitor"></i></span>
+                <span class="pcoded-mtext">Bank Payment</span>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a href="@Url.Action("Index","Types")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-layout"></i></span>
+                <span class="pcoded-mtext">Type</span>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a href="@Url.Action("Index","Categories")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-layout"></i></span>
+                <span class="pcoded-mtext">Categogy</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("AdminIndex","Products")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-wind"></i></span>
+                <span class="pcoded-mtext">Product</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","CustomerOrders")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-inbox"></i></span> <span class="pcoded-mtext">Order <span><span class="badge badge-light float-right ml-2" id="orderCount">@ViewData["OrderCount"]</span></span></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","CommentProducts")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-grid"></i></span> <span class="pcoded-mtext">Comment <span><span class="badge badge-light float-right ml-2" id="commentCount">@ViewData["CommentCount"]</span></span></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","Statistics")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-bar-chart"></i></span>
+                <span class="pcoded-mtext">Statistics</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Customer","Contact")" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-phone"></i></span>
+                <span class="pcoded-mtext">Customer Contact <span><span class="badge badge-light float-right ml-2" id="contactCount">@ViewData["ContactCount"]</span></span></span>
+            </a>
+        </li>
+    }
+</ul>

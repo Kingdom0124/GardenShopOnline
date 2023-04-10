@@ -1,0 +1,229 @@
+﻿@model GardenShopOnline.Models.Product
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    bool isCreate = ViewBag.isCreate;
+}
+
+<input type="text" hidden id="URLgetCategory" value="@Url.Action("getCategory", "Categories")" />
+<input type="text" hidden id="URLgetType" value="@Url.Action("getType", "Types")" />
+@if (!isCreate)
+{
+    <input type="text" hidden id="PEdit_Description" value="@Model.Description" />
+}
+
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Product Management</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "AspNetUsers")"><i class="feather icon-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Products")">Products</a></li>
+                            <li class="breadcrumb-item"><a href="#!">@(isCreate ? "Create product" : "Edit product")</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>@(isCreate ? "Create product" : "Edit product")</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="@Url.Action(isCreate ? "Create" : "Edit", "Products")" enctype="multipart/form-data" novalidate>
+                            @Html.AntiForgeryToken()
+                            @if (!isCreate)
+                            {
+                                @Html.HiddenFor(m => m.ID)
+                                @Html.HiddenFor(m => m.Status)
+                            }
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>
+                                            Name <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+
+                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter product name..." } })
+                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                        </div> <!---->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Category <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+                                        </div> <!---->
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Type <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @Html.DropDownList("TypeID", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.TypeID, "", new { @class = "text-danger" })
+                                        </div> <!---->
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Quantity <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter product quantity..." } })
+                                            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                        </div> <!---->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Price <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            <input class="form-control productPrice text-box single-line" data-val="true" data-val-length="Please enter a value less than or equal to 999,999,999,999" data-val-length-max="15" data-val-number="The field Price must be a number." data-val-required="Please enter product price!" id="priceProduct" name="priceProduct" pattern="[0-9.,]+" placeholder="Enter product Price..." type="text" value="@(isCreate ? string.Empty : @Model.Price.ToString("N0"))">
+                                            @Html.ValidationMessage("priceProduct", "", new { @class = "text-danger" })
+                                        </div> <!---->
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>
+                                            Place <span class="text-danger"></span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @Html.EditorFor(model => model.Place, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter place..." } })
+                                            @Html.ValidationMessageFor(model => model.Place, "", new { @class = "text-danger" })
+                                        </div> <!---->
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <div class="position-relative">
+                                            <textarea id="description" name="Description" placeholder="Enter product description..." rows="4" class="form-control"></textarea>
+                                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                        </div>
+                                        <!---->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>
+                                            Image <span class="text-danger">(*)</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @if (!isCreate)
+                                            {
+                                                <div class="img-item">
+                                                    @{var image = Model.ImageProducts.ToArray();}
+                                                    @for (int i = 0; i < 5; i++)
+                                                    {
+                                                        if (i < image.Length)
+                                                        {
+                                                            <img id="output[@i]" class="img-item-link" src="@Url.Content("~/assets/images/" + image[i].Image)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img id="output[@i]" class="img-item-link" />
+                                                        }
+
+                                                    }
+                                                </div>
+                                                <input type="file" multiple name="file" id="file" class="form-control" accept="image/x-png,image/gif,image/jpeg" onchange="loadFile_edit(event)" />
+                                            }
+                                            else
+                                            {
+                                                <div class="img-item">
+                                                    <img id="output[0]" class="img-item-link" />
+                                                    <img id="output[1]" class="img-item-link" />
+                                                    <img id="output[2]" class="img-item-link" />
+                                                    <img id="output[3]" class="img-item-link" />
+                                                    <img id="output[4]" class="img-item-link" />
+                                                </div>
+                                                <input type="file" multiple required="required" name="Image" id="file" class="form-control" accept="image/x-png,image/gif,image/jpeg" onchange="loadFile_edit(event)" />
+                                                @Html.ValidationMessage("Image", "", new { @class = "text-danger" })
+                                            }
+                                        </div>
+                                        <script>
+                                            var loadFile_edit = function (event) {
+                                                for (var i = 0; i < 5; i++) {
+                                                    document.getElementById('output[' + i + ']').removeAttribute('src');
+                                                }
+                                                if ($("#file")[0].files.length <= 5) {
+                                                    for (var i = 0; i < $("#file")[0].files.length; i++) {
+                                                        var image = document.getElementById('output[' + i + ']');
+                                                        image.src = URL.createObjectURL(event.target.files[i]);
+                                                    }
+                                                } else {
+                                                    $("#file").val('');
+                                                    for (var i = 0; i < 5; i++) {
+                                                        document.getElementById('output[' + i + ']').removeAttribute('src');
+                                                    }
+                                                    swal({
+                                                        title: 'Error !',
+                                                        text: 'You can only select up to 5 photos, please check again !',
+                                                        type: 'error',
+                                                    });
+                                                }
+                                            };
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <button type="submit" class="btn btn-primary float-right">Save</button>
+                                    <button type="button" class="btn  btn-secondary float-right" onclick="location.href='@Url.Action("AdminIndex","Products")';">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/assets/admin/assets/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        if ($('#description').length) {
+            CKEDITOR.replace("description", {
+                cloudServices_tokenUrl: 'https://example.com/cs-token-endpoint',
+                cloudServices_uploadUrl: 'https://your-organization-id.cke-cs.com/easyimage/upload/'
+            });
+
+            var PEdit_Description = "";
+            $('#PEdit_Description')
+                .keypress(function () {
+                    PEdit_Description = $(this).val();
+                })
+                .keypress();
+            CKEDITOR.instances['description'].setData(PEdit_Description);
+        }
+    </script>
+}

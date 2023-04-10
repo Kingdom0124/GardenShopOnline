@@ -1,0 +1,388 @@
+﻿@model IEnumerable<GardenShopOnline.Models.CustomerOrder>
+@{
+    int no5 = 0;
+    int no1 = 0;
+    int no2 = 0;
+    int no3 = 0;
+    int no4 = 0;
+}
+<input hidden type="text" id="URDEditStatus_Order" value="@Url.Action("EditStatus_Order", "CustomerOrders")">
+<input hidden type="text" id="URDDeleteOrder" value="@Url.Action("DeleteOrder", "CustomerOrders")">
+
+<div class="card-body">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link @Session["pills-create"].ToString()" id="pills-create-tab" data-toggle="pill" href="#pills-create" role="tab" aria-controls="pills-create" aria-selected="true">New</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-paid-tab" data-toggle="pill" href="#pills-paid" role="tab" aria-controls="pills-paid" aria-selected="false">Pay in advance</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Session["pills-confirm"].ToString()" id="pills-confirm-tab" data-toggle="pill" href="#pills-confirm" role="tab" aria-controls="pills-confirm" aria-selected="false">Approved</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Session["pills-sent"].ToString()" id="pills-sent-tab" data-toggle="pill" href="#pills-sent" role="tab" aria-controls="pills-sent" aria-selected="false">Delivering</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-success-tab" data-toggle="pill" href="#pills-success" role="tab" aria-controls="pills-success" aria-selected="false">Completed</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" id="pills-cancel-tab" data-toggle="pill" href="#pills-cancel" role="tab" aria-controls="pills-cancel" aria-selected="false">Canceled</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade @Session["pills-create-show"].ToString()" id="pills-create" role="tabpanel" aria-labelledby="pills-create-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+
+                    <div class="table-responsive">
+                        <table id="example" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Code orders</th>
+                                    <th class="">Account</th>
+                                    <th class="">Customer name</th>
+                                    <th class="text-center">Phone</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Method</th>
+                                    <th class="text-center">Date created</th>
+                                    <th class="text-center">Option</th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 1))
+                                {
+                                    no1++;
+                                    <tr>
+                                        <td>@no1</td>
+                                        <td>@item.ID</td>
+                                        <td>@item.AspNetUser.UserName</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.Total.ToString("N0")</td>
+                                        <th>@(item.PaymentMethod == 2 ? "Banking":"")</th>
+                                        <td>@item.DateCreated</td>
+
+                                        <td class="text-center">
+                                            <button title="Xiew" class="btn btn-info" onclick="GetList_orderDetails('@item.ID')">
+                                                Details
+                                            </button>
+
+                                            <button class="btn btn-danger " onclick="GetOrder('@item.ID')">
+                                                Cancel
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade @Session["pills-confirm-show"].ToString() " id="pills-confirm" role="tabpanel" aria-labelledby="pills-confirm-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Code orders</th>
+                                    <th class="">Customer name</th>
+                                    <th class="text-center">Phone</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Method</th>
+                                    <th class="text-center">Date created</th>
+                                    <th class="text-center">Option</th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 2))
+                                {
+                                    no2++;
+                                    <tr>
+                                        <td>@no2</td>
+                                        <td>@item.ID</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.Total.ToString("N0")</td>
+                                        <th>@(item.PaymentMethod == 2 ? "Banking":"")</th>
+                                        <td>@item.DateCreated</td>
+                                        <td class="text-center">
+                                            <button title="View" class="btn btn-info" onclick="GetList_orderDetails('@item.ID')">
+                                                Details
+                                            </button>
+
+                                            <button class="btn btn-danger " onclick="GetOrder('@item.ID')">
+                                                Cancel
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade @Session["pills-sent-show"].ToString() " id="pills-sent" role="tabpanel" aria-labelledby="pills-sent-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+                    <div class="table-responsive">
+                        <table id="example2" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Code orders</th>
+                                    <th class="">Customer name</th>
+                                    <th class="text-center">Phone</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Method</th>
+                                    <th class="text-center">Date created</th>
+                                    <th class="text-center">Option</th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 3))
+                                {
+                                    no3++;
+                                    <tr>
+                                        <td>@no3</td>
+                                        <td>@item.ID</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.Total.ToString("N0")</td>
+                                        <th>@(item.PaymentMethod == 2 ? "Banking":"")</th>
+                                        <td>@item.DateCreated</td>
+                                        <td class="text-center">
+                                            <button title="View" class="btn btn-info" onclick="GetList_orderDetails('@item.ID')">
+                                                Details
+                                            </button>
+
+                                            <button class="btn btn-danger " onclick="GetOrder('@item.ID')">
+                                                Cancel
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-success" role="tabpanel" aria-labelledby="pills-success-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+                    <div class="table-responsive">
+                        <table id="example3" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Code orders</th>
+                                    <th class="">Customer name</th>
+                                    <th class="text-center">Phone</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Method</th>
+                                    <th class="text-center">Date created</th>
+                                    <th class="">Option</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 4))
+                                {
+                                    no4++;
+                                    <tr>
+                                        <td>@no4</td>
+                                        <td>@item.ID</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.Total.ToString("N0")</td>
+                                        <th>@(item.PaymentMethod == 2 ? "Banking":"")</th>
+                                        <td>@item.DateCreated</td>
+                                        <td class="text-center">
+                                            <button title="View" class="btn btn-info" onclick="GetList_orderDetails('@item.ID')">
+                                                Details
+                                            </button>
+
+                                            <button class="btn btn-danger " onclick="GetOrder('@item.ID')">
+                                                Cancel
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-paid" role="tabpanel" aria-labelledby="pills-paid-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+                    <div class="table-responsive">
+                        <table id="example4" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Code orders</th>
+                                    <th class="">Customer name</th>
+                                    <th class="text-center">Phone</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Pay in advance</th>
+                                    <th class="text-center">Method</th>
+                                    <th class="text-center">Date created</th>
+                                    <th class="text-center">Option</th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 5))
+                                {
+                                    no5++;
+                                    <tr>
+                                        <td>@no5</td>
+                                        <td>@item.ID</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.Total.ToString("N0")</td>
+                                        <td class="text-center">@String.Format("{0:0,00}", item.PaidAdvance)</td>
+                                        <th>@(item.PaymentMethod == 2 ? "Banking":"")</th>
+                                        <td>@item.DateCreated</td>
+                                        <td class="text-center">
+                                            <button title="View" class="btn btn-info" onclick="GetList_orderDetails('@item.ID')">
+                                                Details
+                                            </button>
+
+                                            <button class="btn btn-danger " onclick="GetOrder('@item.ID')">
+                                                Cancel
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-cancel" role="tabpanel" aria-labelledby="pills-cancel-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+                    <div class="table-responsive">
+                        <table id="example5" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Code orders</th>
+                                    <th class="">Customer name</th>
+                                    <th class="text-center">Phone</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Method</th>
+                                    <th class="text-center">Date created</th>
+                                    <th class="text-center">Reason</th>
+                                    <th class="text-center">Option</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 6))
+                                {
+                                    no5++;
+                                    <tr>
+                                        <td>@no5</td>
+                                        <td>@item.ID</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.Total.ToString("N0")</td>
+                                        <th>@(item.PaymentMethod == 2 ? "Banking":"")</th>
+                                        <td>@item.DateCreated</td>
+                                        <td class="text-center">@item.Reason</td>
+                                        <td class="text-center">
+                                            <button title="View" class="btn btn-info" onclick="GetList_orderDetails('@item.ID')">
+                                                Details
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="DeleteOrder" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="DeleteOrderLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form class="needs-validation" novalidate>
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title" id="AddCategoryLabel">Cancel order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>
+                                    Reason<span class="text-danger">*</span>
+                                </label>
+                                <input hidden id="edit_idOrder" name="Order_id" />
+                                <div class="position-relative">
+                                    <textarea placeholder="Enter reason for order cancellation!" id="reason" class="form-control" name="reason" rows="4" required></textarea>
+                                    <div class="invalid-feedback">
+                                        The reason for cancellation cannot be left blank !
+                                    </div>
+                                </div> <!---->
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="submit_reason">lưu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

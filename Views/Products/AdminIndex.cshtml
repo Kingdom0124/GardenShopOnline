@@ -1,0 +1,102 @@
+﻿@model IEnumerable<GardenShopOnline.Models.Product>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<input type="text" hidden id="URLgetCategory" value="@Url.Action("getCategory", "Categories")" />
+<input type="text" hidden id="URLgetType" value="@Url.Action("getType", "Types")" />
+<input type="text" hidden id="URLProductList" value="@Url.Action("ProductList", "Products")" />
+
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Product Management</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "AspNetUsers")"><i class="feather icon-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="#!">Products</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select class="custom-select" id="filter_Category" name="filter_Category" required>
+                                        <option value="" disabled="disabled" selected="selected">Select product category</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="custom-select" id="filter_Type" name="filter_Type" required>
+                                        <option value="" disabled="disabled" selected="selected">Select product type</option>
+
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-primary float-right ml-2" onclick="location.href='@Url.Action("Create","Products")';">Add new</button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body table-border-style">
+                            <div class="table-responsive" id="dataContainer">
+                                @{ Html.RenderAction("ProductList", "products", new { category_id = -1, type_id = -1 });}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="ImportModal" tabindex="-1" role="dialog" aria-labelledby="ImportModalTitle" aria-hidden="true" class="modal fade">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary styling-modal-header-update">
+                <h5 id="ImportModalTitle" class="modal-title">Nhập tệp Excel</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("ImportExcel", "Excel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="modal-body">
+                    <label>
+                        Tệp Excel <span class="text-danger">(*)</span>
+                    </label>
+                    <input type="file" id="fileImport" accept=".xlsx, .xls" name="postedFile" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-secondary btn-3d">Tải lại</button>
+                    <button type="submit" class="btn btn-primary btn-3d" data-toggle="modal" data-target="#exampleModalCenter">Import</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script type="text/javascript">
+        var row;
+        $(document).ready(function () {
+            $('#example').DataTable({
+                pagingType: 'full_numbers',
+            });
+        });
+
+    </script>
+}

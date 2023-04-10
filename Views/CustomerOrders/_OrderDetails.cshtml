@@ -1,0 +1,92 @@
+﻿@model GardenShopOnline.Models.CustomerOrderViewModels
+
+@{
+    var order = Model.CustomerOrder;
+    decimal total = (decimal)order.Total;
+    int i = 1;
+}
+
+<div id="invoice">
+    <div class="toolbar hidden-print">
+        <div class="thanks">Thank you!</div>
+        <div class="text-end">
+            <button type="button" class="btn btn-dark" onclick="PrintElem('#invoicePrint')"><i class="fa fa-print"></i>Print</button>
+            <button type="button" class="btn btn-dark" onclick="ExportElem('#invoiceExport')"><i class="fa fa-file-export"></i>Export</button>
+        </div>
+        <hr>
+    </div>
+    <div class="invoice overflow-auto" id="invoicePrint">
+        <div style="min-width: 600px">
+            <header>
+                <div class="row">
+                    <div class="col">
+                        <a href="javascript:;">
+                            <img src="~/assets/customer/images/Img/Logo.png" width="80" alt="Logo" />
+                        </a>
+                    </div>
+                    <div class="col company-details">
+                        <h2 class="name">
+                            Bonsal Garden
+                        </h2>
+                        <div>Phone: 0987654321</div>
+                        <div>Contact me at: <a href="@Url.Action("Index", "Home")">This Site</a></div>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div class="row contacts">
+                    <div class="col invoice-to">
+                        <div class="text-gray-light">Your Detail:</div>
+                        <h2 class="to">@order.FullName</h2>
+                        <div class="address">@order.Address</div>
+                        <div class="email">
+                            <a href="@order.AspNetUser.Email">@order.AspNetUser.Email</a>
+                        </div>
+                    </div>
+                    <div class="col invoice-details">
+                        <h1 class="invoice-id">@order.ID</h1>
+                        <div class="date">Date of Checkout: @order.DateCreated</div>
+                        <div class="date">Ship at 2 days if longer Admin contact you.</div>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th class="text-left">Name Product</th>
+                            <th class="text-right">Unit Price</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">All Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderDetails)
+                        {
+                            <tr>
+                                <td class="no">@(i++)</td>
+                                <td class="text-left">
+                                    <h3>@item.Product.Name</h3>
+                                </td>
+                                <td class="unit">@item.UnitPrice.ToString("N0") đ</td>
+                                <td class="qty">@item.Quantity</td>
+                                <td class="total">@((item.UnitPrice * item.Quantity).ToString("N0")) đ</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">Total</td>
+                            <td>@total.ToString("N0") đ</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div class="notices">
+                    <div>Note:</div>
+                    <div class="notice">@order.Note</div>
+                </div>
+            </main>
+            <footer>If you don't want this bill you can contact Admin for del this.</footer>
+        </div>
+    </div>
+</div>

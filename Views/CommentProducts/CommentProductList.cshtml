@@ -1,0 +1,206 @@
+﻿@model IEnumerable<GardenShopOnline.Models.CommentProduct>
+@{
+    int no1 = 0;
+    int no2 = 0;
+    int no3 = 0;
+
+}
+<input hidden type="text" id="URDEditStatus_Comment" value="@Url.Action("EditStatus_Comment", "CommentProducts")">
+<input hidden type="text" id="URDReplyComment" value="@Url.Action("ReplyComment", "CommentProducts")">
+<input hidden type="text" id="URLDelete" value="@Url.Action("Delete_Category", "categories")">
+
+
+
+<div class="card-body">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-create-tab" data-toggle="pill" href="#pills-create" role="tab" aria-controls="pills-create" aria-selected="true">New</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " id="pills-confirm-tab" data-toggle="pill" href="#pills-confirm" role="tab" aria-controls="pills-confirm" aria-selected="false">Approved</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " id="pills-sent-tab" data-toggle="pill" href="#pills-sent" role="tab" aria-controls="pills-sent" aria-selected="false">Refused</a>
+        </li>
+
+    </ul>
+
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade active show" id="pills-create" role="tabpanel" aria-labelledby="pills-create-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+
+                    <div class="table-responsive">
+                        <table id="example" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Name product</th>
+                                    <th class="">Email</th>
+                                    <th class="">Content</th>
+                                    <th class="text-center">Date created</th>
+                                    <th class="text-center"></th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 1))
+                                {
+                                    no1++;
+                                    <tr>
+                                        <td>@no1</td>
+                                        <td>
+                                            <a href="@Url.Action("Details","Products", new { id = item.ProductID })">@item.Product.Name</a>
+                                        </td>
+                                        <td>@item.AspNetUser.UserName</td>
+                                        <td>@item.Content</td>
+                                        <td>@item.DateCreated</td>
+                                        <td class="text-center">
+                                            <button title="Reply" class="btn btn-info" onclick="GetCmt('@item.ID', '@item.ProductID')">
+                                                <i class="feather icon-server">
+                                                </i>
+                                            </button>
+                                            <button title="Apcet" class="btn btn-success" onclick="EditStatus_comment('@item.ID', 2)">
+                                                <i class="feather icon-check">
+                                                </i>
+                                            </button>
+                                            <button title="Decline" class="btn btn-danger " onclick="EditStatus_comment('@item.ID', 3)">
+                                                <i class="feather icon-trash-2">
+                                                </i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade  " id="pills-confirm" role="tabpanel" aria-labelledby="pills-confirm-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Name product</th>
+                                    <th class="">Email</th>
+                                    <th class="">Content</th>
+                                    <th class="">State</th>
+                                    <th class="text-center">Date created</th>
+                                    <th>Option</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 2))
+                                {
+                                    no2++;
+                                    <tr>
+                                        <td>@no2</td>
+                                        <td><a href="@Url.Action("Details","Products", new { id = item.ProductID })">@item.Product.Name</a></td>
+                                        <td>@item.AspNetUser.UserName</td>
+                                        <td>@item.Content</td>
+                                        <td>
+                                            @(item.Reply_coment!= null ? "Reply" : " ")
+                                        </td>
+                                        <td>@item.DateCreated</td>
+                                        <td class="text-center">
+                                            <button title="Reply" class="btn btn-info" onclick="GetCmt('@item.ID', '@item.ProductID')">
+                                                <i class="feather icon-server">
+                                                </i>
+                                            </button>
+                                            <button title="Decline" class="btn btn-danger " onclick="EditStatus_comment('@item.ID', 3)">
+                                                <i class="feather icon-trash-2">
+                                                </i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade " id="pills-sent" role="tabpanel" aria-labelledby="pills-sent-tab">
+            <div class="card">
+                <div class="card-body table-border-style">
+                    <div class="table-responsive">
+                        <table id="example2" class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center ">#</th>
+                                    <th class="">Name product</th>
+                                    <th class="">Email</th>
+                                    <th class="">Content</th>
+                                    <th class="text-center">Date created</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(m => m.Status == 3))
+                                {
+                                    no3++;
+                                    <tr>
+                                        <td>@no3</td>
+                                        <td><a href="@Url.Action("Details","Products", new { id = item.ProductID })">@item.Product.Name</a></td>
+                                        <td>@item.AspNetUser.UserName</td>
+                                        <td>@item.Content</td>
+                                        <td>@item.DateCreated</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="ReplyComment" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ReplyCommentLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form class="needs-validation" novalidate>
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title" id="AddCategoryLabel">Reply</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>
+                                    Reply<span class="text-danger">*</span>
+                                </label>
+                                <input hidden id="edit_idComment" />
+                                <input hidden id="edit_idProduct" />
+
+                                <div class="position-relative">
+                                    <textarea placeholder="Enter comment reply" id="replyComment" class="form-control" name="reason" rows="4"></textarea>
+
+                                </div> <!---->
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="Reply_comment()">lưu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+

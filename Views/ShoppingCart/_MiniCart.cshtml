@@ -1,0 +1,30 @@
+﻿@model GardenShopOnline.Models.ShoppingCartViewModels
+
+<ul class="minicart-list">
+    @foreach (var item in Model.CartItems)
+    {
+        <li class="minicart-product" id="miniRow-@item.RecordID">
+            <a class="product-item_remove" href="#" data-id="@item.RecordID">
+                <i class="pe-7s-close" data-tippy="Remove"
+                   data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"
+                   data-tippy-arrow="true" data-tippy-theme="sharpborder"></i>
+            </a>
+            <a href="@Url.Action("Details", "Products", new { id = item.ProductID })" class="product-item_img">
+                <img class="img-full" src="~/assets/images/@(item.Product.ImageProducts.FirstOrDefault()?.Image)" alt="Product Image">
+            </a>
+            <div class="product-item_content">
+                <a class="product-item_title" href="@Url.Action("Details", "Products", new { id = item.ProductID })">@item.Product.Name</a>
+                <span class="product-item_quantity">@item.Count x @item.Product.Price.ToString("N0") ₫</span>
+            </div>
+        </li>
+    }
+</ul>
+
+<div class="minicart-item_total">
+    <span>Subtotal</span>
+    <span class="ammount">@Model.CartTotal.ToString("N0") ₫</span>
+</div>
+<div class="group-btn_wrap d-grid gap-2">
+    <a href="@Url.Action("Index", "ShoppingCart")" class="btn btn-dark">View Cart</a>
+    <a href="@Url.Action("AddressAndPayment", "Checkout")" class="btn btn-dark">Checkout</a>
+</div>

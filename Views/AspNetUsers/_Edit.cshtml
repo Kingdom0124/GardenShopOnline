@@ -1,0 +1,44 @@
+﻿@model GardenShopOnline.Models.AspNetUser
+
+<div class="row">
+    @Html.HiddenFor(model => model.Id)
+    
+    <div class="col-md-12">
+        <div class="form-group">
+            <label>
+                Full name<span class="text-danger">*</span>
+            </label>
+            <div class="position-relative">
+                <input type="text" placeholder="Full name" class="form-control" id="fullName" name="fullName" value="@Model.FullName" required>
+                <div class="invalid-feedback">
+                    Please enter full name!
+                </div>
+            </div> <!---->
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="form-group">
+            <label>
+                Email<span class="text-danger">*</span>
+            </label>
+            <div class="position-relative">
+                <input type="email" placeholder="Email" class="form-control" id="email" name="email" pattern="^\w+([-+.']\w+)*@('@')\w+([-.]\w+)*\.\w+([-.]\w+)*$" value="@Model.Email" required readonly>
+                <div class="invalid-feedback">
+                    Please enter valid email !
+                </div>
+            </div> <!---->
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="form-group">
+            <label>
+                Role<span class="text-danger">*</span>
+            </label>
+            <div class="position-relative">
+                @Html.DropDownList("role_id", null, htmlAttributes: new { @class = "form-control", @aria_label = "Choose role" })
+                <div class="invalid-feedback">Please choose role</div>
+            </div> <!---->
+
+        </div>
+    </div>
+</div>

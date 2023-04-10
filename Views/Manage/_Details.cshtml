@@ -1,0 +1,34 @@
+﻿@model GardenShopOnline.Models.AspNetUser
+
+<div class="myaccount-details">
+    <form action="@Url.Action("UpdateDetails", "Manage", new { user = Model })" class="myaccount-form" id="accountForm">
+        <div class="myaccount-form-inner">
+            @Html.HiddenFor(m => m.Id)
+            <div class="single-input">
+                <label>Full Name*</label>
+                @Html.EditorFor(m => m.FullName, new { @placeholder = "Your full name" })
+                @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+            </div>
+            <div class="single-input">
+                <label>Address *</label>
+                @Html.EditorFor(m => m.Address, new { @placeholder = "Street address" })
+                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+            </div>
+            <div class="single-input">
+                <label>Phone *</label>
+                @Html.EditorFor(m => m.PhoneNumber, new { @placeholder = "Your phone number" })
+                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+            </div>
+            <div class="single-input">
+                <label>Email *</label>
+                @Html.EditorFor(m => m.Email, new { @placeholder = "Your email" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+            <div class="single-input">
+                <button class="btn btn-custom-size lg-size btn-pronia-primary" type="submit">
+                    <span>SAVE CHANGES</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

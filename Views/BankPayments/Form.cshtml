@@ -1,0 +1,145 @@
+﻿@model GardenShopOnline.Models.BankPayment
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    bool isCreate = ViewBag.isCreate;
+
+}
+
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Bank Payment Management</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="feather icon-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="#!">Products</a></li>
+                            <li class="breadcrumb-item"><a href="#!">@(isCreate ? "Create bank payment" : "Edit bank payment")</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>@(isCreate ? "Create bank payment" : "Edit bank payment")</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="@Url.Action(isCreate ? "Create" : "Edit", "BankPayments")" enctype="multipart/form-data" novalidate>
+                            @Html.AntiForgeryToken()
+                            @if (!isCreate)
+                            {
+                                @Html.HiddenFor(m => m.ID)
+                                @Html.HiddenFor(m => m.Status)
+                                @Html.HiddenFor(m => m.Image)
+                            }
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Bank Name <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @Html.EditorFor(model => model.Bank, new { htmlAttributes = new { @class = "form-control", @placeholder = "Bank Name..." } })
+                                            @Html.ValidationMessageFor(model => model.Bank, "", new { @class = "text-danger" })
+
+                                        </div> <!---->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Bank Branch <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control", @placeholder = "Bank Branch..." } })
+                                            @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
+                                        </div> <!---->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Account Number <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @Html.EditorFor(model => model.AccountNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Account Number..." } })
+                                            @Html.ValidationMessageFor(model => model.AccountNumber, "", new { @class = "text-danger" })
+                                        </div> <!---->
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Account Name <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="position-relative">
+                                            @Html.EditorFor(model => model.AccountName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Account Name..." } })
+                                            @Html.ValidationMessageFor(model => model.AccountName, "", new { @class = "text-danger" })
+                                        </div> <!---->
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>
+                                            Image <span class="text-danger">(*)</span>
+                                        </label>
+
+                                        <div class="position-relative">
+                                            @if (!isCreate)
+                                            {
+                                                <div class="img-item">
+                                                    <img id="output" class="img-item-link" src="@Url.Content("~/assets/images/" + Model.Image)" />
+                                                </div>
+                                                <input type="file" required="required" name="file" id="file" class="form-control" accept="image/x-png,image/gif,image/jpeg" onchange="loadFile_edit(event)" />
+                                                    }
+                                                    else
+                                                    {
+                                                <div class="img-item">
+                                                    <img id = "output" class="img-item-link" />
+                                                </div>
+                                                <input type = "file" required="required" name="Image" id="file" class="form-control" accept="image/x-png,image/gif,image/jpeg" onchange="loadFile_edit(event)" />
+                                                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+                                            }
+                                        </div>
+                                        <script>
+                                            var loadFile_edit = function (event) {
+                                                var image = document.getElementById('output');
+                                                image.src = URL.createObjectURL(event.target.files[0]);
+                                            };
+                                        </script>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-12 ">
+                                    <button type="submit" class="btn btn-primary float-right">Save</button>
+                                    <button type="button" class="btn  btn-secondary float-right" onclick="location.href='@Url.Action("Index","BankPayments")';">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,237 @@
+﻿@model IEnumerable<GardenShopOnline.Models.CustomerOrder>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<input type="text" hidden id="URLFindOrder" value="@Url.Action("FindOrder", "CustomerOrders")/" />
+
+
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Order</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="@Url.Action("Index", "AspNetUsers")">
+                                    <i class="feather icon-home">
+                                    </i>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="javascript:void(0)">Order</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <div class="mx-datepicker">
+                                        <div class="mx-input-wrapper">
+                                            <input name="date_start" id="filter_DateStart" type="date" placeholder="" class="form-control custom-width" value="@String.Format("{0:yyyy-MM-dd}",DateTime.Now.AddDays((-DateTime.Now.Day)+1))">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mx-datepicker">
+                                        <div class="mx-input-wrapper">
+                                            <input name="date_end" id="filter_DateEnd" type="date" class="form-control custom-width" value="@String.Format("{0:yyyy-MM-dd}",DateTime.Now.AddMonths(1).AddDays(-(DateTime.Now.Day)))">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="dataContainer">
+                        @{ Html.RenderAction("OrrderList", "CustomerOrders");}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="dataContainer2">
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var row;
+        $(document).ready(function () {
+            $('#example').DataTable({
+                pagingType: 'full_numbers',
+            });
+            $('#example1').DataTable({
+                pagingType: 'full_numbers',
+            });
+            $('#example2').DataTable({
+                pagingType: 'full_numbers',
+            });
+            $('#example3').DataTable({
+                pagingType: 'full_numbers',
+            });
+            $('#example4').DataTable({
+                pagingType: 'full_numbers',
+            });
+            $('#example5').DataTable({
+                pagingType: 'full_numbers',
+            });
+        });
+        //----------------------FILTER ORDER DATE TIME------------------------------------------------
+
+
+        $("#filter_DateStart").change(function () {
+            var date_start = $("#filter_DateStart").val();
+            var date_end = $("#filter_DateEnd").val();
+            if (date_start <= date_end) {
+                GetList_order(date_start, date_end)
+            } else {
+                sweetAlert
+                    ({
+                        title: "Error",
+                        text: "The start time must be less than the end time !",
+                        confirmButtonText: "OK",
+                        type: "error",
+                        allowOutsideClick: true,
+
+                    })
+            }
+
+        });
+        $("#filter_DateEnd").change(function () {
+            var date_start = $("#filter_DateStart").val();
+            var date_end = $("#filter_DateEnd").val();
+            if (date_start <= date_end) {
+                GetList_order(date_start, date_end)
+            } else {
+                sweetAlert
+                    ({
+                        title: "Error",
+                        text: "The start time must be less than the end time !",
+                        confirmButtonText: "OK",
+                        type: "error",
+                        allowOutsideClick: true,
+
+                    })
+            }
+        });
+
+        function GetList_order(date_start, date_end) {
+            console.log(date_start)
+            $.ajax({
+                url: '@Url.Action("OrrderList", "CustomerOrders")',
+                data: {
+                    date_start: date_start,
+                    date_end: date_end,
+                }
+            }).done(function (result) {
+                $('#dataContainer').html(result);
+                $('#example').DataTable();
+                $('#example1').DataTable();
+                $('#example2').DataTable();
+                $('#example3').DataTable();
+                $('#example4').DataTable();
+                $('#example5').DataTable();
+
+            }).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(textStatus)
+                console.log(errorThrown)
+                alert("Something Went Wrong, Try Later");
+            });
+        }
+
+        function GetList_orderDetails(id) {
+            $.ajax({
+                url: '@Url.Action("OrrderDetailsList", "CustomerOrders")',
+                data: {
+                    order_id: id,
+                }
+            }).done(function (result) {
+                $('#dataContainer2').html(result);
+                $('#detailModal.close').css('display', 'none');
+                $('#detailModal').modal('show');
+
+            }).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(textStatus)
+                console.log(errorThrown)
+                alert("Something Went Wrong, Try Later");
+            });
+        }
+
+        function EditStatus_order(id) {
+            var URDEditStatus_Order = "";
+            $('#URDEditStatus_Order')
+                .keypress(function () {
+                    URDEditStatus_Order = $(this).val();
+                })
+                .keypress();
+            var status = $('#status_order').val();
+            var Paid_note = $('#Paid_note').val();
+            var Paid_advance = $('#Paid_advance').val().replace(/\,/g, '').replace(/\./g, '');
+            var CustomerOrder = {};
+            CustomerOrder.id = id;
+            CustomerOrder.Status = status;
+            CustomerOrder.Note = Paid_note;
+            CustomerOrder.PaidAdvance = Paid_advance;
+            $.ajax({
+                url: URDEditStatus_Order,
+                async:false,
+                data: JSON.stringify(CustomerOrder),
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    $('#detailModal.close').css('display', 'none');
+                    $('#detailModal').modal('hide');
+                    var date_start = $("#filter_DateStart").val();
+                    var date_end = $("#filter_DateEnd").val();
+                    GetList_order(date_start, date_end);
+                    sweetAlert
+                        ({
+                            title: "Status update successful!",
+                            confirmButtonText: "OK",
+                            type: "success"
+                        })
+
+                    // Refresh admin count of order
+                    $("#orderCount").parent().load('@Url.Action("GetAdminSidebar", "Home")' + " #orderCount");
+
+                    $.ajax({
+                        url: "@Url.Action("EmailStatus", "CustomerOrders")",
+                        data: JSON.stringify(data),
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json'
+                    });
+                }
+            });
+        }
+
+        $(document).on('change', '#status_order', function () {
+            if ($('#status_order').val() == 5) {
+                $('#paid').show();
+                $('#reason_check').hide();
+            } else if ($('#status_order').val() == 6) {
+                $('#paid').hide();
+                $('#reason_check').show();
+            } else {
+                $('#paid').hide();
+                $('#reason_check').hide();
+            }
+        });
+    </script>
+}

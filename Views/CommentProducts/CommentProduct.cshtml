@@ -1,0 +1,45 @@
+﻿@model IEnumerable<GardenShopOnline.Models.CommentProduct>
+
+<div class="blog-comment mt-0">
+    <h4 class="heading">Comments (@Model.Count())</h4>
+    @foreach (var item in Model.Where(c => c.Reply_coment == null))
+    {
+        <div class="blog-comment-item">
+            <div class="blog-comment-img">
+                <img src="~/assets/customer/images/blog/avatar/1-1-120x120.png" alt="User Image">
+            </div>
+            <div class="blog-comment-content">
+                <div class="user-meta">
+                    <h2 class="user-name">@item.AspNetUser.Email</h2>
+                    <span class="date">@item.DateCreated</span>
+                </div>
+                <p class="user-comment">
+                    @item.Content
+                </p>
+            </div>
+        </div>
+        var Replycoment = item.CommentProduct1.ToList();
+        if (Replycoment != null && Replycoment.Count() > 0)
+        {
+            foreach (var item1 in Replycoment)
+            {
+                <div class="blog-comment-item relpy-item">
+                    <div class="blog-comment-img">
+                        <img src="~/assets/customer/images/blog/avatar/1-1-120x120.png" alt="User Image">
+                    </div>
+                    <div class="blog-comment-content">
+                        <div class="user-meta">
+                            <h2 class="user-name">@item1.AspNetUser.Email</h2>
+                            <span class="date">@item1.DateCreated</span>
+                        </div>
+                        <p class="user-comment">
+                            @item1.Content
+                        </p>
+                      
+                    </div>
+                </div>
+            }
+        }
+    }
+
+</div>

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<GardenShopOnline.Models.Product>
+@using Constants = GardenShopOnline.Helpers.Constants;
+@{
+    int no = 0;
+}
+<table id="example" class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th class=" text-center">Image</th>
+            <th class=" text-center">Name</th>
+            <th class=" text-center">Category</th>
+            <th class="text-center">Price</th>
+            <th class="text-center">Quantity</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Option</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            string customswitch_SP = "customswitch" + item.ID;
+
+            no++;
+            <tr>
+                <td>@no  <input hidden type="text" name="record" value="@item.ID"></td>
+                <td class="text-center">
+                    <img class="img-item-product" src="@Url.Content("~/assets/images/" +item.ImageProducts.FirstOrDefault()?.Image)" />
+                </td>
+                <td class="text-center">@item.Name</td>
+                <td class=" text-center">@item.Category.Name</td>
+                <td class="text-center">@item.Price.ToString("N0")</td>
+                <td class="text-center">@item.Quantity.ToString("N0")</td>
+                <td class="text-center">
+                    @if (item.Status == Constants.SHOW_STATUS)
+                    {
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" checked class="custom-control-input" id="@customswitch_SP">
+                            <label class="custom-control-label" for="@customswitch_SP"></label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="@customswitch_SP">
+                            <label class="custom-control-label" for="@customswitch_SP"></label>
+                        </div>
+                    }
+                    <input hidden type="text" id="URDEditStatus" value="@Url.Action("EditStatus_Product", "products")">
+                    <script language="javascript">
+                         document.getElementById('@customswitch_SP').onclick = function (e) {
+                                                                EditStatus(@item.ID);
+                                                        };
+                    </script>
+                </td>
+                <td class="text-center">
+                    <button title="Cập nhật" class="btn btn-success" onclick="location.href='@Url.Action("Edit","Products", new {id = item.ID })';">
+                        <i class="feather icon-edit">
+                        </i>
+                    </button>
+
+                    <input hidden type="text" id="URLDelete" value="@Url.Action("Delete_Product", "Products")">
+                    <button class="btn btn-danger" onclick="deleteAlert('@item.ID', '@item.ID')" id="Delete">
+                        <i class="feather icon-trash-2">
+                        </i>
+                    </button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

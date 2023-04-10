@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <h2 class="content-header">Trang chủ</h2>
+    </div>
+</div>
+
+<!-- Welcome section start -->
+<section>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mt-4 ml-4">Chào <span class="text-primary">@User.Identity.Name</span>,<br />Chọn mục để quản lý ở thanh tác vụ bên trái</h4>
+                </div>
+                <div class="card-body" style="margin-top: -2.25rem">
+                    <div class="card-block">
+                        <img class="mx-auto d-block w-50" alt="Welcome" src="~/assets/admin-staff/img/resources/img_welcome.svg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Welcome section end -->

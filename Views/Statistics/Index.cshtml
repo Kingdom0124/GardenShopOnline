@@ -1,0 +1,233 @@
+﻿@{
+    ViewBag.Title = "Statistics";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Statistics</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="@Url.Action("Index", "AspNetUsers")">
+                                    <i class="feather icon-home">
+                                    </i>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="javascript:void(0)">Statistics</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Statistics</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mx-datepicker">
+                                        <div class="mx-input-wrapper">
+                                            <input name="date_start" id="filter_DateStart" type="date" placeholder="" class="form-control custom-width date-filter" value="@String.Format("{0:yyyy-MM-dd}", DateTime.Today.AddDays(-6))">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mx-datepicker">
+                                        <div class="mx-input-wrapper">
+                                            <input name="date_end" id="filter_DateEnd" type="date" class="form-control custom-width date-filter" value="@String.Format("{0:yyyy-MM-dd}", DateTime.Today)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <canvas class="line-chart-ex chartjs" id="statistics-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script src="~/assets/Admin/assets/js/plugins/chart.min.js"></script>
+    <script src="~/assets/Admin/assets/js/plugins/chartjs-plugin-datalabels@2.js"></script>
+    <script type="text/javascript">
+        //Get the context of the Chart canvas element we want to select
+        var ctx = $("#statistics-chart"),
+            chartWrapper = $('.chartjs'),
+            startDateFilter = $('#filter_DateStart'),
+            endDateFilter = $('#filter_DateEnd'),
+            startDateLabel = new Date(startDateFilter.val()),
+            endDateLabel = new Date(endDateFilter.val()),
+            startDate = startDateLabel.toUTCString(),
+            endDate = endDateLabel.toUTCString();
+
+        const chartOptions = {
+            plugins: {
+                title: {
+                    text: 'Statistics',
+                    display: true,
+                    font: {
+                        size: 25
+                    }
+                },
+                datalabels: {
+                    backgroundColor: function (context) {
+                        return context.dataset.backgroundColor;
+                    },
+                    borderRadius: 4,
+                    color: 'white',
+                    font: {
+                        weight: 'bold'
+                    },
+                    formatter: Math.round,
+                    padding: 6
+                }
+            },
+            // Core options
+            aspectRatio: 5 / 3,
+            layout: {
+                padding: {
+                    top: 32,
+                    right: 16,
+                    bottom: 16,
+                    left: 8
+                }
+            },
+            elements: {
+                line: {
+                    fill: false,
+                    tension: 0.4
+                }
+            },
+            scales: {
+                x: {
+                    time: {
+                        unit: 'day',
+                        // Luxon format string
+                        tooltipFormat: 'dd/MM/yy'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'value'
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            }
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetData", "Statistics")',
+            data: { startDate, endDate },
+            success: function (response) {
+                var chartData = fetchData(response, startDateLabel, endDateLabel);
+
+                // Create the chart
+                var chart = new Chart(ctx, {
+                    type: 'line',
+                    data: chartData,
+                    options: chartOptions,
+                    plugins: [ChartDataLabels]
+                });
+
+                $('.date-filter').change(function () {
+                    var startDateLabel = new Date(startDateFilter.val()),
+                        endDateLabel = new Date(endDateFilter.val()),
+                        startDate = new Date(startDateFilter.val()).toUTCString(),
+                        endDate = new Date(endDateFilter.val()).toUTCString();
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetData", "Statistics")',
+                        data: { startDate, endDate },
+                        success: function (response) {
+                            var chartData = fetchData(response, startDateLabel, endDateLabel);
+                            chart.data = chartData;
+                            chart.update();
+                        }
+                    });
+                });
+            }
+        });
+
+        function getDateLabels(startDateLabel, endDateLabel) {
+            var dates = [];
+            // Loop to create date labels
+            for (var d = startDateLabel; d <= endDateLabel; d.setDate(d.getDate() + 1)) {
+                dates.push(new Date(d).toLocaleDateString('en-GB'));
+            }
+            return dates;
+        }
+
+        function fetchData(response, startDateLabel, endDateLabel) {
+            // Get data
+            var orderCount = response.map(function (e) {
+                return e.Item1;
+            });
+            var accountCount = response.map(function (e) {
+                return e.Item2;
+            });
+
+            return chartData = {
+                labels: getDateLabels(startDateLabel, endDateLabel),
+                datasets: [{
+                    label: 'Order created',
+                    backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: false,
+                    data: orderCount,
+                    datalabels: {
+                        align: 'start',
+                        anchor: 'start',
+                        display: function (context) {
+                            // Only return positive values
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
+                    }
+                },
+                {
+                    label: 'Account created',
+                    backgroundColor: 'rgba(255, 55, 132, 0.8)',
+                    borderColor: 'rgb(255, 55, 132)',
+                    fill: false,
+                    data: accountCount,
+                    datalabels: {
+                        align: 'start',
+                        anchor: 'start',
+                        display: function (context) {
+                            // Only return positive values
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
+                    }
+                }]
+            }
+        }
+    </script>
+}

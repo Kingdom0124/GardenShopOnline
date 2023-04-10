@@ -1,0 +1,162 @@
+﻿@model GardenShopOnline.Models.ShoppingCartViewModels
+
+@{
+    ViewBag.Title = "Shopping Cart";
+}
+
+<!-- Begin Main Content Area -->
+<main class="main-content">
+    <div class="breadcrumb-area breadcrumb-height" data-bg-image="../../assets/customer/images/breadcrumb/bg/1-1-1919x388.jpg">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-item">
+                        <h2 class="breadcrumb-heading">Cart Page</h2>
+                        <ul>
+                            <li>
+                                <a href="@Url.Action("Index", "Home")">Home</a>
+                            </li>
+                            <li>Cart Page</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cart-area section-space-y-axis-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-success d-none" id="update-message" role="alert"></div>
+                    <form action="javascript:void(0)">
+                        <div class="table-content table-responsive">
+                            <table class="table" id="tblCart">
+                                <thead>
+                                    <tr>
+                                        <th width="10%">remove</th>
+                                        <th width="20%">images</th>
+                                        <th width="10%">Product</th>
+                                        <th width="20%">Unit Price</th>
+                                        <th width="20%">Quantity</th>
+                                        <th width="20%">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.CartItems)
+                                    {
+                                        <tr id="row-@item.RecordID">
+                                            <td class="product_remove" data-id="@item.RecordID">
+                                                <a href="#">
+                                                    <i class="pe-7s-close" data-tippy="Remove" data-tippy-inertia="true"
+                                                       data-tippy-animation="shift-away" data-tippy-delay="50"
+                                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"></i>
+                                                </a>
+                                            </td>
+                                            <td class="product-thumbnail">
+                                                <a href="#">
+                                                    <img class="w-25" src="~/assets/images/@(item.Product.ImageProducts.FirstOrDefault()?.Image)" alt="Cart Thumbnail">
+                                                </a>
+                                            </td>
+                                            <td class="product-name"><a href="@Url.Action("Details", "Products", new { id = item.ProductID })">@item.Product.Name</a></td>
+                                            <td class="product-price"><span class="amount">@item.Product.Price.ToString("N0") ₫</span></td>
+                                            <td class="quantity" id="item-count-@item.RecordID">
+                                                <div class="cart-plus-minus" data-id="@item.RecordID" data-productid="@item.ProductID">
+                                                    <input class="cart-plus-minus-box" id="cartItemQuantity-@item.RecordID" readonly value="@item.Count" type="text">
+                                                    <div class="dec qtybutton">
+                                                        <i class="fa fa-minus"></i>
+                                                    </div>
+                                                    <div class="inc qtybutton">
+                                                        <i class="fa fa-plus"></i>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="product-subtotal"><span class="amount" id="product-subtotal-@item.ProductID">@item.Subtotal.ToString("N0") ₫</span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 ml-auto">
+                                <div class="cart-page-total">
+                                    <h2>Cart totals</h2>
+                                    <ul>
+                                        <li>Subtotal <span class="cart-total">@Model.CartTotal.ToString("N0") ₫</span></li>
+                                        <li>Total <span class="cart-total">@Model.CartTotal.ToString("N0") ₫</span></li>
+                                    </ul>
+                                    <a href="@Url.Action("AddressAndPayment", "Checkout")">Proceed to checkout</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Main Content Area End Here -->
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            // Document.ready -> link up remove event handler
+            $('.product_remove').on('click', function (e) {
+                e.preventDefault();
+                // Get the id from the link
+                var recordToDelete = $(this).attr('data-id');
+                if (recordToDelete != '') {
+                    // Perform the ajax post
+                    $.post('/ShoppingCart/RemoveProduct', { 'id': recordToDelete }, function (data) {
+                        // Successful requests get here
+                        // Update the page elements
+                        $('#row-' + data.DeleteId).fadeOut('slow');
+                        $('.cart-total').text(numberWithDots(data.CartTotal) + ' ₫');
+                        $('#update-message').removeClass('d-none').text(data.Message);
+                        getMiniCart();
+                    });
+                }
+            });
+
+            $('.qtybutton').on('click', function () {
+                var $button = $(this);
+                var oldValue = $button.parent().find('input').val();
+                var productId = $(this).parent().attr('data-productid');
+                if ($button.hasClass('inc')) {
+                    var newVal = parseFloat(oldValue) + 1;
+                    if (productId != '') {
+                        // Perform the ajax post
+                        $.get('/ShoppingCart/AddToCart', { 'id': productId }, function (data) {
+                            // Successful requests get here
+                            // Update the page elements
+                            updateTotal(data, productId);
+                            getMiniCart();
+                        });
+                    }
+                } else {
+                    // Don't allow decrementing below zero
+                    if (oldValue > 1) {
+                        var newVal = parseFloat(oldValue) - 1;
+                        // Get the id from the link
+                        var recordToDecrease = $(this).parent().attr('data-id');
+                        if (recordToDecrease != '') {
+                            // Perform the ajax post
+                            $.post('/ShoppingCart/DecreaseQuantity', { 'id': recordToDecrease }, function (data) {
+                                // Successful requests get here
+                                updateTotal(data, productId);
+                                getMiniCart();
+                            });
+                        }
+                    } else {
+                        newVal = 1;
+                    }
+                }
+                $button.parent().find('input').val(newVal);
+            });
+
+            function updateTotal(data, productId) {
+                $('.cart-total').text(numberWithDots(data.CartTotal) + ' ₫');
+                $('#product-subtotal-' + productId).text(numberWithDots(data.ItemTotal) + ' ₫');
+            }
+        });
+    </script>
+}

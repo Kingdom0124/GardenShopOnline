@@ -1,0 +1,67 @@
+﻿@model IEnumerable<GardenShopOnline.Models.Type>
+@using Constants = GardenShopOnline.Helpers.Constants;
+
+@{
+    int no = 0;
+}
+<table id="example" class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+
+            <th class="text-center">Name</th>
+            <th width="15%">Status</th>
+            <th width="15%">
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string customswitch_DM = "customswitch" + item.ID;
+            no++;
+            <tr>
+                <td>@no <input hidden type="text" name="record" value="@item.ID"></td>
+
+                <td class="text-center">@item.Name</td>
+
+                <td>
+                    @if (item.Status == Constants.SHOW_STATUS)
+                    {
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" checked class="custom-control-input" id="@customswitch_DM">
+                            <label class="custom-control-label" for="@customswitch_DM"></label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="@customswitch_DM">
+                            <label class="custom-control-label" for="@customswitch_DM"></label>
+                        </div>
+                    }
+                    <input hidden type="text" id="URDEditStatus" value="@Url.Action("EditStatus_Type", "Types")">
+                    <script language="javascript">
+                                                        document.getElementById('@customswitch_DM').onclick = function (e) {
+                                                                EditStatus(@item.ID);
+                                                        };
+                    </script>
+                </td>
+                <td>
+                    <button class="btn btn-success " onclick="GetCategory(this, @item.ID)">
+                        <i class="feather icon-edit">
+                        </i>
+                    </button>
+                    <input hidden type="text" id="URLDelete" value="@Url.Action("Delete_Type", "Types")">
+                    <button class="btn btn-danger" onclick="deleteAlert('@item.ID', '@item.ID')" id="Delete">
+                        <i class="feather icon-trash-2">
+                        </i>
+                    </button>
+
+                </td>
+            </tr>
+
+        }
+
+    </tbody>
+</table>

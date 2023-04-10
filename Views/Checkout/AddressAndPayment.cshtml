@@ -1,0 +1,177 @@
+﻿@model CustomerOrder
+@using GardenShopOnline.Models
+
+@{
+    ViewBag.Title = "Address And Payment";
+    IEnumerable<BankPayment> bankPayments = ViewBag.BankPayments;
+}
+
+<main class="main-content">
+    <div class="breadcrumb-area breadcrumb-height" data-bg-image="../../assets/customer/images/breadcrumb/bg/1-1-1919x388.jpg">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-item">
+                        <h2 class="breadcrumb-heading">Checkout Page</h2>
+                        <ul>
+                            <li>
+                                <a href="@Url.Action("Index", "Home")">Home</a>
+                            </li>
+                            <li>Checkout</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-warning" role="alert">
+            @Html.Raw(ViewBag.Error)
+        </div>
+    }
+    <div class="checkout-area section-space-top-75">
+        <div class="container">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "orderForm" }))
+            {
+                <div class="row justify-content-md-center">
+                    <div class="col-lg-7">
+                        <div class="checkbox-form">
+                            <h3>Billing Details</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Email</label>
+                                        <input type="text" readonly class="form-control-plaintext bg-light" id="staticEmail" value="@User.Identity.Name">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Full Name <span class="required">*</span></label>
+                                        @Html.TextBoxFor(m => m.FullName, new { @placeholder = "Your full name" })
+                                        @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Address <span class="required">*</span></label>
+                                        @Html.TextBoxFor(m => m.Address, new { @placeholder = "Street address" })
+                                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Phone <span class="required">*</span></label>
+                                        @Html.TextBoxFor(m => m.Phone, new { @placeholder = "Your phone number" })
+                                        @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Note</label>
+                                        @Html.TextBoxFor(m => m.Note, new { @placeholder = "Your Note" })
+                                        @Html.ValidationMessageFor(m => m.Note, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkbox-form">
+                            <h3>Payment</h3>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-check">
+                                        @Html.RadioButton("payment", "cash", true, new { @class = "form-check-input" })
+                                        <label class="form-check-label">
+                                            Payment using cash
+                                        </label>
+                                        <div id="collapseOne" class="collapse show">
+                                            <div class="card-body">
+                                                <p>
+                                                    Payment on delivery. Household collection fee: ₫0 VND. Preferential shipping fee (if any) also applies to collection fee.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-check">
+                                        @Html.RadioButton("payment", "bank", false, new { @class = "form-check-input" })
+                                        <label class="form-check-label">
+                                            Direct bank transfer
+                                        </label>
+                                        <div id="collapseTwo" class="collapse">
+                                            <div class="card-body">
+                                                <p>
+                                                    In the transfer content, please specify your <span class="fw-bold text-danger">"Phone number, first name and last name."</span>
+                                                </p>
+                                                <div class="row justify-content-center">
+                                                    @foreach (var item in bankPayments)
+                                                    {
+                                                        <div class="col-6">
+                                                            <h5 class="text-center fw-bold">@item.Bank</h5>
+                                                            <img class="mx-auto d-block mb-3" height="150" src="~/assets/images/@item.Image" />
+                                                            <span><strong>Account number:</strong> @item.AccountNumber</span><br />
+                                                            <span><strong>Account name:</strong> @item.AccountName</span><br />
+                                                            <span><strong>Branch:</strong> @item.Branch</span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-12">
+                        <div class="your-order">
+                            <h3>Your order</h3>
+                            @Html.Action("GetCheckoutCart", "ShoppingCart")
+                            <div class="order-button-payment">
+                                <input value="Place order" id="placeOrder" type="button">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $('#placeOrder').click(function () {
+            var orderForm = $('#orderForm');
+            if (orderForm.valid()) {
+                // Show empty cart message
+                if (!$('.your-order-table tbody tr').length) {
+                    Swal.fire({
+                        title: 'Warning',
+                        text: 'Your cart is empty!',
+                        icon: 'warning',
+                        customClass: {
+                            confirmButton: 'btn btn-custom-size lg-size btn-pronia-primary'
+                        },
+                        buttonsStyling: false
+                    })
+                } else {
+                    // Pass payment method to controller
+                    orderForm.submit();
+                }
+            }
+        });
+
+        $("input[name='payment']").click(function () {
+            var checkedValue = $("input[name='payment']:checked").val();
+            console.log(checkedValue);
+            if (checkedValue == "cash") {
+                $("#collapseOne").collapse('show');
+                $("#collapseTwo").collapse('hide');
+            } else if (checkedValue == "bank") {
+                $("#collapseOne").collapse('hide');
+                $("#collapseTwo").collapse('show');
+            } else {
+                console.log("Oops.");
+            }
+        });
+    </script>
+}

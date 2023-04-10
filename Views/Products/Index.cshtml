@@ -1,0 +1,135 @@
+﻿@model List<GardenShopOnline.Models.Product>
+
+@{
+    ViewBag.Title = "Products";
+    string searchKey = Request.QueryString["searchKey"] != null ? Request.QueryString["searchKey"] : "";
+}
+<br />
+<!-- Begin Main Content Area -->
+<main class="main-content">
+    <div class="shop-area mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 order-2 order-lg-1 pt-5 pt-lg-0" style="width: 20%;">
+                    <div class="sidebar-area">
+                        <div class="product-topbar">
+                            <ul>
+                                <li class="page-count" style="padding: 10px 65px;">
+                                    <span>@Model.Count</span> Product Found of <span>@ViewData["TotalCount"]</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="widgets-searchbox mb-4">
+                            <form action="@Url.Action("Index","Products")" id="widgets-searchbox">
+                                @Html.TextBox("searchKey", searchKey, new { @type = "search", @class = "input-field", @placeholder = "Search" })
+                                <button class="widgets-searchbox-btn" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="short">
+                            @Html.DropDownList("Type", null, "Sort by type", new { @class = "nice-select filter-select mb-3 w-100", @id = "typeFilter" })
+                        </div>
+                        <div class="short">
+                            @Html.DropDownList("Category", null, "Sort by category", new { @class = "nice-select filter-select w-100", @id = "categoryFilter" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-9 col-lg-8 order-1 order-lg-2">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="grid-view" role="tabpanel" aria-labelledby="grid-view-tab">
+                            <div class="product-grid-view row g-y-20">
+                                @if (Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <div class="col-xl-3 col-md-4 col-sm-6" style="width: 20%;">
+                                            <div class="product-item" style="border: 1px solid #0d934e;border-radius: 10px;">
+                                                <div class="product-img"  style="width: 100%; height: 190px; overflow: hidden;">
+                                                    <a href="@Url.Action("Details", "Products", new { id = item.ID })">
+                                                        <img class="primary-img" style="max-width: 100%; height: auto; object-fit: cover;" src="~/assets/images/@(item.ImageProducts.FirstOrDefault()?.Image)" alt="Product Images">
+                                                    </a>
+                                                    @if (!User.IsInRole("Admin") && !User.IsInRole("Staff") && item.Quantity > 0)
+                                                    {
+                                                        <div class="product-add-action">
+                                                            <ul>
+                                                                <li>
+                                                                    <a class="add-to-cart" href="@Url.Action("AddToCart", "ShoppingCart", new { id = item.ID })" data-tippy="Add to cart" data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder">
+                                                                        <i class="pe-7s-cart"></i>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="product-content">
+                                                    <a class="product-name" href="@Url.Action("Details", "Products", new { id = item.ID })">@item.Name</a>
+                                                    <div class="price-box pb-1">
+                                                        <span class="new-price">@item.Price.ToString("N0") ₫</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-center mt-3">No results found <i class="pe-7s-help1"></i></div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Main Content Area End Here -->
+
+@section scripts {
+    <script type="text/javascript">
+        $('.add-to-cart').on('click', function (e) {
+            e.preventDefault();
+            // Call action to add product to cart
+            $.ajax({
+                url: $(this).attr('href'),
+                type: 'GET'
+            }).done(function () {
+                // Refresh mini cart
+                getMiniCart();
+                toastr.options.positionClass = 'toast-bottom-right';
+                toastr["success"]("Add succeeded!");
+            });
+        });
+
+        // Handle event on filter change
+        $(".filter-select").on('change', function () {
+            getParameters();
+        });
+
+        // Handle event on search form submit
+        $('#widgets-searchbox').submit(function (e) {
+            e.preventDefault();
+            getParameters();
+        });
+
+        function getParameters() {
+            var searchKey = $('#searchKey').val();
+            var typeId = $("#typeFilter").val();
+            var categoryId = $('#categoryFilter').val();
+            GetProductList(searchKey, typeId, categoryId)
+        }
+
+        function GetProductList(searchKey, typeId, categoryId) {
+            var url = location.protocol + '//' + location.host + location.pathname;
+            url += '?searchKey=' + searchKey;
+            if (typeId) {
+                url += '&typeId=' + typeId;
+            }
+            if (categoryId) {
+                url += '&categoryId=' + categoryId;
+            }
+            location.href = url;
+        }
+    </script>
+}

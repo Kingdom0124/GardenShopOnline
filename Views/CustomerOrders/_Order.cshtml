@@ -1,0 +1,52 @@
+﻿@model IEnumerable<GardenShopOnline.Models.CustomerOrder>
+
+<div class="myaccount-orders">
+    <h4 class="small-title">My Order</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <tbody>
+                <tr>
+                    <th>Num</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Tolat</th>
+                    <th>Option</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><a class="account-order-id" href="#">@item.ID</a></td>
+                        <td>@item.DateCreated</td>
+                        @switch (item.Status)
+                        {
+                            case 1:
+                                <td>Wait for confirmation</td>
+                                break;
+                            case 2:
+                                <td>Approved</td>
+                                break;
+                            case 3:
+                                <td>Delivering</td>
+                                break;
+                            case 4:
+                                <td>Completed</td>
+                                break;
+                            case 5:
+                                <td>Pay in advance</td>
+                                break;
+                            case 6:
+                                <td>Canceled</td>
+                                break;
+                            default:
+                                break;
+                        }
+                        <td>@item.Total.ToString("N0") ₫</td>
+                        <td>
+                            <a href="@Url.Action("GetOrderDetails", "CustomerOrders", new { order_id = item.ID })" class="btn btn-dark order-details"><span>View</span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

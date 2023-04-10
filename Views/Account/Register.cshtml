@@ -1,0 +1,56 @@
+﻿@model GardenShopOnline.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+
+<main class="main-content">
+    <div class="login-register-area section-space-y-axis-100" data-bg-image="../../assets/customer/images/background/img_background_tree.jpg">
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-lg-8">
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="login-form">
+                            <h4 class="login-title">Register</h4>
+                            <div class="row">
+                                @Html.ValidationSummary("", new { @class = "text-danger mb-2" })
+                                <div class="col-md-6">
+                                    <label>Full Name</label>
+                                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", @placeholder = "Your full name" })
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Phone Number</label>
+                                    @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @placeholder = "Your phone number" })
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Address</label>
+                                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Street address" })
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Email Address <span class="text-danger">*</span></label>
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email addresss" })
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Password <span class="text-danger">*</span></label>
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Confirm Password <span class="text-danger">*</span></label>
+                                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Confirm Password" })
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-custom-size lg-size btn-pronia-primary">Register</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

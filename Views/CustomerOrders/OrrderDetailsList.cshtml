@@ -1,0 +1,198 @@
+﻿@model IEnumerable<GardenShopOnline.Models.OrderDetail>
+@using GardenShopOnline.Models
+
+@{
+    int no = 0;
+    var Order = (CustomerOrder)ViewBag.Order;
+}
+
+<div id="detailModal" tabindex="-1" aria-labelledby="detailModalTitle" class="modal fade bd-example-modal-lg" style="display: none;" aria-hidden="true">
+    <div role="document" class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 id="detailModalTitle" class="modal-title white">Details @Order.ID</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="text-center">Product Name</th>
+                                        <th class="text-center">Unit price</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        no++;
+
+                                        <tr>
+                                            <td>
+                                                @no
+                                            </td>
+
+                                            <td class="text-center">
+                                                @item.Product.Name
+                                            </td>
+                                            <td class="text-center">
+                                                @String.Format("{0:0,00}", item.UnitPrice)
+
+                                            </td>
+                                            <td class="text-center">
+                                                @item.Quantity
+
+                                            </td>
+                                            <td class="text-center">
+                                                @String.Format("{0:0,00}", item.UnitPrice * item.Quantity)
+
+                                            </td>
+                                            <td class="text-center">
+                                                @item.Note
+                                            </td>
+                                        </tr>
+
+                                    }
+
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5" class="text-right">
+                                            <h5>Total</h5>
+                                        </td>
+                                        <td class="text-left">
+                                            <h5>
+                                                @String.Format("{0:0,00}", Order.Total)
+                                            </h5>
+                                        </td>
+
+
+                                    </tr>
+                                    @if (Order.PaidAdvance > 0)
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-right">
+                                                <h5>Paid</h5>
+                                            </td>
+                                            <td class="text-left">
+                                                <h5>
+                                                    @String.Format("{0:0,00}", Order.PaidAdvance)
+                                                </h5>
+                                            </td>
+
+
+                                        </tr>
+                                    }
+                                    @if (Order.Status == 5 && Order.PaidAdvance > 0)
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="text-right">
+                                                <label>
+                                                    Paid in advance <span class="text-danger">*</span>
+                                                </label>
+
+                                                <input type="text" placeholder="Enter product quantity... " value="@(((decimal)Order.PaidAdvance).ToString("N0"))" id="Paid_advance" class="form-control productPrice" name="quantity" pattern="\S+.*">
+
+                                            </td>
+                                        </tr>
+
+                                    }
+                                    <tr>
+                                        <td colspan="6" class="text-right">
+                                            <select class="custom-select" id="status_order" name="CategoryDropdown" value="2">
+                                                <option value="1">New</option>
+                                                <option value="5">Pay in advance</option>
+                                                <option value="2">Approved</option>
+                                                <option value="3">Delivering</option>
+                                                <option value="4">Completed</option>
+                                                <option value="6"> Canceled</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="display: none;" id="paid">
+                                        <td colspan="6">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Paid in advance <span class="text-danger">*</span>
+                                                    </label>
+
+                                                    <input type="text" placeholder="Enter product quantity... " id="Paid_advance" class="form-control productPrice" name="quantity" pattern="\S+.*">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Note
+                                                    </label>
+
+                                                    <textarea id="Paid_note" placeholder="Note" class="form-control "></textarea>
+
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr style="display: none;" id="reason_check">
+                                        <td colspan="6">
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Reason <span class="text-danger">*</span>
+                                                    </label>
+
+                                                    <textarea id="order_reason" placeholder="Note" class="form-control "></textarea>
+
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="6" class="text-right">
+                                            <button type="button" class="btn  btn-secondary" data-dismiss="modal">Cancel</button>
+
+                                            <button title="Cập nhật" class="btn btn-success" onclick="EditStatus_order('@Order.ID')">
+                                                Save
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('status_order').value = '@Order.Status';
+    $('.productPrice').keydown(function (e) {
+        setTimeout(() => {
+            let parts = $(this).val().split(".");
+            let v = parts[0].replace(/\D/g, ""),
+                dec = parts[1]
+            let calc_num = Number((dec !== undefined ? v + "." + dec : v));
+            // use this for numeric calculations
+            // console.log('number for calculations: ', calc_num);
+            let n = new Intl.NumberFormat('en-EN').format(v);
+            n = dec !== undefined ? n + "." + dec : n;
+            $(this).val(n);
+        })
+    })
+</script>

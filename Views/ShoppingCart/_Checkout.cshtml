@@ -1,0 +1,36 @@
+﻿@model GardenShopOnline.Models.ShoppingCartViewModels
+
+<div class="your-order-table table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="cart-product-name">Product</th>
+                <th class="cart-product-total">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr class="cart_item">
+                    <td class="cart-product-name">
+                        @item.Product.Name<strong class="product-quantity">
+                            × @item.Count
+                        </strong>
+                    </td>
+                    <td class="cart-product-total"><span class="amount">@item.Subtotal.ToString("N0") ₫</span></td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="cart-subtotal">
+                <th>Cart Subtotal</th>
+                <td><span class="amount">@Model.CartTotal.ToString("N0") ₫</span></td>
+            </tr>
+            <tr class="order-total">
+                <th>Order Total</th>
+                <td><strong><span class="amount">@Model.CartTotal.ToString("N0") ₫</span></strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    <input type="hidden" id="Total" name="Total" value="@Model.CartTotal" />
+</div>

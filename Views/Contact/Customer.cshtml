@@ -1,0 +1,113 @@
+﻿@model IEnumerable<System.Linq.IGrouping<object, GardenShopOnline.Models.Message>>
+
+@{
+    ViewBag.Title = "Contact us";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Customer contact</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="@Url.Action("Index", "AspNetUsers")">
+                                    <i class="feather icon-home">
+                                    </i>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="javascript:void(0)">Customer contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Customer contact</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row gutters">
+
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                                    <div class="card m-0">
+
+                                        <!-- Row start -->
+                                        <div class="row no-gutters">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
+                                                <div class="users-container">
+                                                    <ul class="users">
+                                                        @foreach (var item in Model)
+                                                        {
+                                                            string seen = string.Empty;
+                                                            if (item.Any(m => m.DateViewed == null))
+                                                            {
+                                                                seen = "busy";
+                                                            }
+                                                            <li class="person" data-chat="@Url.Action("GetData", "Contact", new { fromUserId = item.Key })">
+                                                                <div class="user">
+                                                                    <img src="~/assets/chat/images/img_user.png" alt="User avatar" />
+                                                                    <span class="status status-@item.Key @seen"></span>
+                                                                </div>
+                                                                <p class="name-time">
+                                                                    <span class="name">@item.FirstOrDefault().AspNetUser.Email</span>
+                                                                </p>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
+                                                <div id="chatDiv"></div>
+                                            </div>
+                                        </div>
+                                        <!-- Row end -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div id="imageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="" id="imagepreview" class="w-75 d-flex mx-auto">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>  
+
+@section styles {
+    <link href="~/assets/chat/css/app-chat.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/assets/signalR/jquery.signalR.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/assets/chat/js/app-chat.js"></script>
+}
