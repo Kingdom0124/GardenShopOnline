@@ -184,7 +184,8 @@
 
 @section scripts {
     <script type="text/javascript">
-        var dataTable;
+        var dataTable,
+            userEmail = '@User.Identity.Name';
         dataTable = $('#tblUser').DataTable({
             ajax: {
                 url: '@Url.Action("GetData", "AspNetUsers")',
@@ -201,14 +202,13 @@
                 { 'data': 'Name' },
                 {
                     'data': 'Id', 'render': function (data, type, row) {
-                        return "<button class='btn btn-success' onclick=getUser('" + data + "')>" +
-                        "<i class='feather icon-edit'>" +
+                        return "<button class='btn btn-success mr-1' onclick=getUser('" + data + "')>" +
+                            "<i class='feather icon-edit'>" +
                             "</i>" +
-                            "</button>" +
-                            "<button class='btn btn-danger' onclick=deleteUser('" + data + "')>" +
+                            "</button>" + (row['Email'] == userEmail ? '' : ("<button class='btn btn-danger' onclick=deleteUser('" + data + "')>" +
                             "<i class='feather icon-trash-2'>" +
                             "</i>" +
-                            "</button>";
+                            "</button>"));
                     }
                 }
             ],
@@ -272,9 +272,16 @@
                 url: '@Url.Action("Edit", "AspNetUsers")',
                 type: 'GET',
                 data: { id },
-                success: function (response) {
+                success: async function (response) {
                     // Add response in Modal body
-                    $('#EditUser .modal-body').html(response);
+                    await $('#EditUser .modal-body').html(response);
+
+                    if ($('#EditUser .modal-body #email').val() == userEmail) {
+                        // Disable role select if user is only
+                        var roleSelect = $('#EditUser .modal-body #role_id');
+                        roleSelect.before(' <input type="hidden" id="role_id" name="role_id" value="' + roleSelect.val() + '">')
+                        roleSelect.prop('disabled', true);
+                    }
 
                     // Display Modal
                     $('#EditUser').modal('show');
