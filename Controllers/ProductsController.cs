@@ -280,7 +280,6 @@ namespace GardenShopOnline.Controllers
             return View(product);
         }
 
-        [Authorize(Roles = "Admin, Staff")]
         public ActionResult Comment_product(int product_id, string content)
         {
             CommentProduct comment = new CommentProduct
