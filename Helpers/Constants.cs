@@ -10,7 +10,7 @@ namespace GardenShopOnline.Helpers
         public const string ACCOUNT_BONSAIGARDEN = "bonsaigarden6@gmail.com";
 
         /// <summary>
-        /// Trạng thái đơn hàng
+        /// In loop
         /// </summary>
         public static int WAIT_FOR_CONFIRMATION = 1;
         public static int APPROVED = 2;
@@ -28,7 +28,7 @@ namespace GardenShopOnline.Helpers
         };
 
         /// <summary>
-        /// Trạng thái ẩn/hiện
+        /// Show/hide
         /// </summary>
         public static int SHOW_STATUS = 1;
         public static int HIDDEN_STATUS = 2;
@@ -36,20 +36,20 @@ namespace GardenShopOnline.Helpers
 
 
         /// <summary>
-        /// Phương thức thanh toán
+        /// Pay
         /// </summary>
         public static int BANK_METHOD = 2;
         public static int CASH_METHOD = 1;
 
         /// <summary>
-        /// Trạng thái comment
+        /// Note comment
         /// </summary>
         public static int NEW_COMMENT = 1;
         public static int APPROVED_COMMENT = 2;
         public static int REFUSED_COMMENT = 3;
 
         /// <summary>
-        /// Loại tin nhắn
+        /// Mess Type
         /// </summary>
         public static int TYPE_TEXT = 1;
         public static int TYPE_IMAGE = 2;

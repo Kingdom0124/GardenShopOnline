@@ -68,12 +68,12 @@ namespace GardenShopOnline.Controllers
                     }
                     else
                     {
-                        ViewBag.msg = "Hình ảnh phải lớn hơn hoặc bằng 4MB!";
+                        ViewBag.msg = "Pic must > 4MB!";
                     }
                 }
                 else
                 {
-                    ViewBag.msg = "Định dạng file không hợp lệ!";
+                    ViewBag.msg = "File not Apcet!";
                 }
                 db.SaveChanges();
                 Session["notification"] = "Add succeeded!";
@@ -135,12 +135,12 @@ namespace GardenShopOnline.Controllers
                         }
                         else
                         {
-                            ViewBag.msg = "Hình ảnh phải lớn hơn hoặc bằng 4MB!";
+                            ViewBag.msg = "Pic must > 4MB!";
                         }
                     }
                     else
                     {
-                        ViewBag.msg = "Định dạng file không hợp lệ!";
+                        ViewBag.msg = "File not Apcet!";
                     }
                 }
                 db.Entry(bankPayment).State = EntityState.Modified;

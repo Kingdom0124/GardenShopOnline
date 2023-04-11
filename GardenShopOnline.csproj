@@ -668,12 +668,7 @@
     <Content Include="assets\customer\images\Img\IMG20211015145240.jpg" />
     <Content Include="assets\customer\images\Img\IMG20220426171620.jpg" />
     <Content Include="assets\customer\images\Img\IMG20220805162434.jpg" />
-    <Content Include="assets\customer\images\newsletter\1-1920x400.jpg" />
     <Content Include="assets\customer\images\offcanvas\close-white.svg" />
-    <Content Include="assets\customer\images\slider\bg\1-1.jpg" />
-    <Content Include="assets\customer\images\slider\bg\2-1.jpg" />
-    <Content Include="assets\customer\images\slider\inner-img\New.png" />
-    <Content Include="assets\customer\images\slider\inner-img\New2.png" />
     <Content Include="assets\customer\images\storyset\img_thankyou.svg" />
     <Content Include="assets\customer\images\testimonial\bg\1-1-1820x443.jpg" />
     <Content Include="assets\customer\images\testimonial\icon\quotation.png" />

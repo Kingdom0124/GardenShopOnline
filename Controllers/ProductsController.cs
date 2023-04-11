@@ -46,7 +46,7 @@ namespace GardenShopOnline.Controllers
         }
 
         [Authorize(Roles = "Admin, Staff")]
-        // sử dụng PartialView để có thể lọc sản phẩm mà không load lại toàn trang
+        // Use PartialView not to reload page
         public ActionResult ProductList(int category_id, int type_id)
         {
             var links = from l in db.Products
@@ -236,7 +236,7 @@ namespace GardenShopOnline.Controllers
                             }
                             else
                             {
-                                ViewBag.msg = "Hình ảnh phải nhỏ hơn hoặc bằng 50MB!";
+                                ViewBag.msg = "Pic must > 50MB!";
                                 ViewBag.CategoryID = new SelectList(db.Categories, "ID", "Name", product.CategoryID);
                                 ViewBag.TypeID = new SelectList(db.Types, "ID", "Name", product.TypeID);
                                 ViewBag.isCreate = true;
@@ -245,7 +245,7 @@ namespace GardenShopOnline.Controllers
                         }
                         else
                         {
-                            ViewBag.msg = "Định dạng file không hợp lệ!";
+                            ViewBag.msg = "File not Apcet!";
                             ViewBag.CategoryID = new SelectList(db.Categories, "ID", "Name", product.CategoryID);
                             ViewBag.TypeID = new SelectList(db.Types, "ID", "Name", product.TypeID);
                             ViewBag.isCreate = true;
