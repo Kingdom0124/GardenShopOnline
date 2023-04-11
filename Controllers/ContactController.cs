@@ -142,6 +142,23 @@ namespace GardenShopOnline.Controllers
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult Delete(string id)
+        {
+            bool status = true;
+            try
+            {
+                db.Messages.RemoveRange(db.Messages.Where(m => m.FromUserId == id || m.ToUserId == id));
+                db.SaveChanges();
+            }
+            catch
+            {
+                status = false;
+            }
+            return Json(new { status }, JsonRequestBehavior.AllowGet);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

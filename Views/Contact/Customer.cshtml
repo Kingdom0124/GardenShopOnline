@@ -42,11 +42,8 @@
                         </div>
                         <div class="card-body">
                             <div class="row gutters">
-
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
                                     <div class="card m-0">
-
                                         <!-- Row start -->
                                         <div class="row no-gutters">
                                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
@@ -59,14 +56,29 @@
                                                             {
                                                                 seen = "busy";
                                                             }
-                                                            <li class="person" data-chat="@Url.Action("GetData", "Contact", new { fromUserId = item.Key })">
-                                                                <div class="user">
-                                                                    <img src="~/assets/chat/images/img_user.png" alt="User avatar" />
-                                                                    <span class="status status-@item.Key @seen"></span>
+                                                            <li class="person" data-chat="@Url.Action("GetData", "Contact", new { fromUserId = item.Key })" id="chat-@item.FirstOrDefault().FromUserId">
+                                                                <div class="d-flex justify-content-between align-items-center header-actions row">
+                                                                    <div class="col-sm-12 col-lg-8 d-flex justify-content-center justify-content-lg-start align-items-center">
+                                                                        <div class="user">
+                                                                            <img src="~/assets/chat/images/img_user.png" alt="User avatar" />
+                                                                            <span class="status status-@item.Key @seen"></span>
+                                                                        </div>
+                                                                        <span class="name-time">
+                                                                            <span class="name">@item.FirstOrDefault().AspNetUser.Email</span>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="col-sm-12 col-lg-4">
+                                                                        @if (User.IsInRole("Admin"))
+                                                                        {
+                                                                            <div class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
+                                                                                <button type="button" class="btn btn-sm btn-danger float-right my-2" onclick="deleteChat('@item.FirstOrDefault().FromUserId')" title="Delete" id="Delete">
+                                                                                    <i class="feather icon-trash-2">
+                                                                                    </i>
+                                                                                </button>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
                                                                 </div>
-                                                                <p class="name-time">
-                                                                    <span class="name">@item.FirstOrDefault().AspNetUser.Email</span>
-                                                                </p>
                                                             </li>
                                                         }
                                                     </ul>
@@ -100,7 +112,7 @@
             </div>
         </div>
     </div>
-</div>  
+</div>
 
 @section styles {
     <link href="~/assets/chat/css/app-chat.css" rel="stylesheet" />
@@ -110,4 +122,46 @@
     <script src="~/assets/signalR/jquery.signalR.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script src="~/assets/chat/js/app-chat.js"></script>
+    <script type="text/javascript">
+        function deleteChat(id) {
+            swal({
+                title: "Are you sure you want to delete ?",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Yes",
+                confirmButtonColor: "#ec6c62",
+            },
+                function () {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Contact")',
+                        data: { id },
+                        type: 'POST'
+                    })
+                        .done(function (data) {
+                            if (data.status == true) {
+                                sweetAlert
+                                    ({
+                                        title: "Delete successfully",
+                                        confirmButtonText: "OK",
+                                        type: "success"
+                                    },
+                                        function () {
+                                            $('#chat-' + id).remove();
+                                            $('#chatDiv').empty();
+                                        })
+                            }
+                            else {
+                                sweetAlert
+                                    ({
+                                        title: "Delete failed !",
+                                        confirmButtonText: "OK",
+                                        type: "error"
+                                    })
+                            }
+
+                        })
+                })
+        }
+    </script>
 }

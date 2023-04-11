@@ -10,7 +10,6 @@ using System.Web;
 using System.Web.Mvc;
 using Constants = GardenShopOnline.Helpers.Constants;
 
-
 namespace GardenShopOnline.Controllers
 {
     public class CommentProductsController : Controller
@@ -39,11 +38,11 @@ namespace GardenShopOnline.Controllers
                 _userManager = value;
             }
         }
+
         // GET: CommentProducts
         [Authorize(Roles = "Admin, Staff")]
         public ActionResult Index()
         {
-
             var commentProducts = db.CommentProducts.Include(c => c.Product);
             return View(commentProducts.ToList());
         }
@@ -121,6 +120,11 @@ namespace GardenShopOnline.Controllers
         {
             if (disposing)
             {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
                 db.Dispose();
             }
             base.Dispose(disposing);

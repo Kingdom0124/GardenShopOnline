@@ -1,5 +1,8 @@
 ﻿using GardenShopOnline.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Constants = GardenShopOnline.Helpers.Constants;
 
@@ -7,7 +10,29 @@ namespace GardenShopOnline.Controllers
 {
     public class HomeController : Controller
     {
+        private ApplicationUserManager _userManager;
         private readonly BonsaiGardenEntities db = new BonsaiGardenEntities();
+
+        public HomeController()
+        {
+        }
+
+        public HomeController(ApplicationUserManager userManager)
+        {
+            UserManager = userManager;
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         [HttpGet]
         public ActionResult Index()
@@ -19,7 +44,7 @@ namespace GardenShopOnline.Controllers
         [HttpGet]
         public ActionResult CategoryList()
         {
-            var categories = db.Categories.OrderByDescending(c => c.ID);
+            var categories = db.Categories.Where(c => c.Status != 3).OrderByDescending(c => c.ID);
             return PartialView("_CategoryList", categories.ToList());
         }
 
@@ -42,9 +67,10 @@ namespace GardenShopOnline.Controllers
         [HttpGet]
         public ActionResult GetAdminSidebar()
         {
+            string adminAccountId = UserManager.FindByEmail(Constants.ACCOUNT_BONSAIGARDEN).Id;
             ViewData["OrderCount"] = db.CustomerOrders.Count(c => c.Status == Constants.WAIT_FOR_CONFIRMATION);
             ViewData["CommentCount"] = db.CommentProducts.Count(c => c.Status == Constants.NEW_COMMENT);
-            ViewData["ContactCount"] = db.Messages.Count(c => c.DateViewed == null);
+            ViewData["ContactCount"] = db.Messages.Where(c => c.FromUserId != adminAccountId).GroupBy(c => c.FromUserId).Count(c => c.OrderByDescending(item => item.ID).FirstOrDefault().DateViewed == null);
             return PartialView("_AdminSidebar");
         }
 
@@ -52,6 +78,11 @@ namespace GardenShopOnline.Controllers
         {
             if (disposing)
             {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
                 db.Dispose();
             }
             base.Dispose(disposing);
