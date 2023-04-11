@@ -63,7 +63,7 @@
                                                     }
                                                 </div>
                                                 <div class="product-content">
-                                                    <a class="product-name" href="@Url.Action("Details", "Products", new { id = item.ID })">@item.Name</a>
+                                                    <a class="product-name text-truncate w-100" href="@Url.Action("Details", "Products", new { id = item.ID })">@item.Name</a>
                                                     <div class="price-box pb-1">
                                                         <span class="new-price">@item.Price.ToString("N0") ₫</span>
                                                     </div>
