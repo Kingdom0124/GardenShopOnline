@@ -44,7 +44,7 @@ namespace GardenShopOnline.Controllers
         [HttpGet]
         public ActionResult CategoryList()
         {
-            var categories = db.Categories.Where(c => c.Status != 3).OrderByDescending(c => c.ID);
+            var categories = db.Categories.OrderByDescending(c => c.ID).Take(20);
             return PartialView("_CategoryList", categories.ToList());
         }
 
@@ -61,7 +61,7 @@ namespace GardenShopOnline.Controllers
             {
                 links = links.Where(p => p.TypeID == typeId);
             }
-            return PartialView("_ProductList", links.Where(c => c.Status == Constants.SHOW_STATUS).Take(10).OrderByDescending(c => c.ID));
+            return PartialView("_ProductList", links.Where(c => c.Status == Constants.SHOW_STATUS).OrderByDescending(c => c.ID).Take(20).ToList());
         }
 
         [HttpGet]

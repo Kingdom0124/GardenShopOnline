@@ -74,7 +74,7 @@
                                     @Model.Quantity Available Stocks
                                 </li>
                             </ul>
-                            <br/>
+                            <br />
                             <div class="product-category">
                                 <span class="title">SKU:</span>
                                 <ul>
@@ -164,7 +164,7 @@
                     <div class="col-lg-12">
                         <div class="swiper-container product-slider">
                             <div class="swiper-wrapper">
-                                @Html.Action("ProductList", "Home", new { productId = Model.ID, typeId = Model.TypeID, categoryId = Model.CategoryID })
+                                @Html.Action("GetRelatedProducts", "Products", new { productId = Model.ID, typeId = Model.TypeID, categoryId = Model.CategoryID })
                             </div>
                         </div>
                     </div>

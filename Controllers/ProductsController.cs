@@ -49,9 +49,7 @@ namespace GardenShopOnline.Controllers
         // Use PartialView not to reload page
         public ActionResult ProductList(int category_id, int type_id)
         {
-            var links = from l in db.Products
-                        where l.Category.Status != Constants.DELETED_STATUS && l.Type.Status != Constants.DELETED_STATUS
-                        select l;
+            var links = from l in db.Products select l;
 
             if (category_id != -1)
             {
@@ -159,7 +157,7 @@ namespace GardenShopOnline.Controllers
                         }
                         else
                         {
-                            ViewBag.msg = "Fife not ling Aperp!";
+                            ViewBag.msg = "Fife not image!";
                             ViewBag.CategoryID = new SelectList(db.Categories, "ID", "Name", product.CategoryID);
                             ViewBag.TypeID = new SelectList(db.Types, "ID", "Name", product.TypeID);
                             ViewBag.isCreate = true;

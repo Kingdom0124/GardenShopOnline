@@ -62,32 +62,6 @@
         </div>
     </div>
 </section>
-<div id="ImportModal" tabindex="-1" role="dialog" aria-labelledby="ImportModalTitle" aria-hidden="true" class="modal fade">
-    <div role="document" class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary styling-modal-header-update">
-                <h5 id="ImportModalTitle" class="modal-title">Nhập tệp Excel</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            @using (Html.BeginForm("ImportExcel", "Excel", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                <div class="modal-body">
-                    <label>
-                        Tệp Excel <span class="text-danger">(*)</span>
-                    </label>
-                    <input type="file" id="fileImport" accept=".xlsx, .xls" name="postedFile" class="form-control">
-                </div>
-                <div class="modal-footer">
-                    <button type="reset" class="btn btn-secondary btn-3d">Tải lại</button>
-                    <button type="submit" class="btn btn-primary btn-3d" data-toggle="modal" data-target="#exampleModalCenter">Import</button>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-
 
 @section scripts {
     <script type="text/javascript">
