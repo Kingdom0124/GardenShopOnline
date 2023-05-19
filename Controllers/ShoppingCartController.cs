@@ -66,6 +66,12 @@ namespace GardenShopOnline.Controllers
 
             // Add it to the shopping cart
             var cart = ShoppingCart.GetCart(HttpContext);
+            int itemCount = cart.GetItemCount(id);
+            // Check if number exceeds product quantity
+            if ((itemCount + quantity.GetValueOrDefault(1)) > addedproduct.Quantity)
+            {
+                return Json(new { error = true, quantity = addedproduct.Quantity }, JsonRequestBehavior.AllowGet);
+            }
             cart.AddToCart(addedproduct, quantity);
 
             // Get item subtotal

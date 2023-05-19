@@ -50,9 +50,8 @@
                     }
                     <input hidden type="text" id="URDEditStatus" value="@Url.Action("EditStatus_Product", "products")">
                     <script language="javascript">
-                         document.getElementById('@customswitch_SP').onclick = function (e) {
-                                                                EditStatus(@item.ID);
-                                                        };
+                         document.getElementById('@customswitch_SP').onclick = function (e) {EditStatus(@item.ID);
+                         };
                     </script>
                 </td>
                 <td class="text-center">

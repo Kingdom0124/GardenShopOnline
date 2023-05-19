@@ -106,7 +106,7 @@
                 var recordToDelete = $(this).attr('data-id');
                 if (recordToDelete != '') {
                     // Perform the ajax post
-                    $.post('/ShoppingCart/RemoveProduct', { 'id': recordToDelete }, function (data) {
+                    $.post('@Url.Action("RemoveProduct", "ShoppingCart")', { 'id': recordToDelete }, function (data) {
                         // Successful requests get here
                         // Update the page elements
                         $('#row-' + data.DeleteId).fadeOut('slow');
@@ -122,14 +122,20 @@
                 var oldValue = $button.parent().find('input').val();
                 var productId = $(this).parent().attr('data-productid');
                 if ($button.hasClass('inc')) {
-                    var newVal = parseFloat(oldValue) + 1;
                     if (productId != '') {
                         // Perform the ajax post
-                        $.get('/ShoppingCart/AddToCart', { 'id': productId }, function (data) {
-                            // Successful requests get here
-                            // Update the page elements
-                            updateTotal(data, productId);
-                            getMiniCart();
+                        $.get('@Url.Action("AddToCart", "ShoppingCart")', { 'id': productId }, async function (data) {
+                            if (!data.error) {
+                                // Successful requests get here
+                                // Update the page elements
+                                updateTotal(data, productId);
+                                getMiniCart();
+                                $button.parent().find('input').val(parseFloat(oldValue) + 1);
+                            } else {
+                                // Show error message
+                                toastr.options.positionClass = 'toast-bottom-right';
+                                toastr["error"]("Oops, you have overselected product inventory! Product only have " + data.quantity + " items left");
+                            }
                         });
                     }
                 } else {
@@ -140,7 +146,7 @@
                         var recordToDecrease = $(this).parent().attr('data-id');
                         if (recordToDecrease != '') {
                             // Perform the ajax post
-                            $.post('/ShoppingCart/DecreaseQuantity', { 'id': recordToDecrease }, function (data) {
+                            $.post('@Url.Action("DecreaseQuantity", "ShoppingCart")', { 'id': recordToDecrease }, function (data) {
                                 // Successful requests get here
                                 updateTotal(data, productId);
                                 getMiniCart();
@@ -149,8 +155,8 @@
                     } else {
                         newVal = 1;
                     }
+                    $button.parent().find('input').val(newVal);
                 }
-                $button.parent().find('input').val(newVal);
             });
 
             function updateTotal(data, productId) {

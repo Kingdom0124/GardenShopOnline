@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -270,12 +271,16 @@ namespace GardenShopOnline.Controllers
         public ActionResult Details(int? id)
         {
             Product product = db.Products.Find(id);
+            
+
             if (product == null)
             {
                 return RedirectToAction("NotFound", "Error");
             }
             ViewData["CommentCount"] = db.CommentProducts.Where(c => c.ProductID == id && c.Status == Constants.HIDDEN_STATUS).Count();
             return View(product);
+
+            
         }
 
         public ActionResult Comment_product(int product_id, string content)

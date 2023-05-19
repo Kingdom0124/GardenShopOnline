@@ -94,11 +94,17 @@
             $.ajax({
                 url: $(this).attr('href'),
                 type: 'GET'
-            }).done(function () {
-                // Refresh mini cart
-                getMiniCart();
-                toastr.options.positionClass = 'toast-bottom-right';
-                toastr["success"]("Add succeeded!");
+            }).done(function (data) {
+                if (!data.error) {
+                    // Refresh mini cart
+                    getMiniCart();
+                    toastr.options.positionClass = 'toast-bottom-right';
+                    toastr["success"]("Add succeeded!");
+                } else {
+                    // Show error message
+                    toastr.options.positionClass = 'toast-bottom-right';
+                    toastr["error"]("Oops, you have overselected product inventory! Product only have " + data.quantity + " items left");
+                }
             });
         });
 
